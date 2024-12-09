@@ -7,7 +7,7 @@ import { GeoJsonLayer } from '@deck.gl/layers'
 const MAP_STYLE = "https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json";
 //const MAP_STYLE = "http://server.arcgisonline.com/arcgis/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}"
 //https://c.tile.openstreetmap.org/{z}/{x}/{y}.png
-const DATA_URL = "http://localhost:3002/data"
+const DATA_URL = "http://localhost:3001/data"
 
 const INITIAL_VIEW = {
   latitude: 21.88234,
