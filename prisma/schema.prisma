@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id          Int      @id @default(autoincrement())
+  password    String   @db.VarChar(30)
+  active      Boolean
+  institution String   @db.VarChar(40)
+  email       String   @unique @db.VarChar(40)
+  firstName   String   @db.VarChar(40)
+  lastName    String   @db.VarChar(40)
+  projects    UsuarioProject[]
+  bitacoras   Bitacora[]
+}
+
+model Project {
+  id          Int               @id @default(autoincrement())
+  name        String            @db.VarChar(40)
+  description String
+  active      Boolean
+  users       UsuarioProject[]
+}
+
+model UsuarioProject {
+  idUsuario Int
+  idProject Int
+  Usuario   Usuario @relation(fields: [idUsuario], references: [id], onDelete: Cascade)
+  Project   Project @relation(fields: [idProject], references: [id], onDelete: Cascade)
+
+  @@id([idUsuario, idProject])
+}
+
+model Screen {
+  id          Int       @id @default(autoincrement())
+  name        String    @db.VarChar(30)
+  description String
+  bitacoras   Bitacora[]
+}
+
+model Bitacora {
+  idUsuario Int
+  idScreen  Int
+  dateTime  DateTime
+  Usuario   Usuario @relation(fields: [idUsuario], references: [id], onDelete: Cascade)
+  Screen    Screen? @relation(fields: [idScreen], references: [id], onDelete: Cascade)
+
+  @@id([idUsuario, idScreen])
+}
+
