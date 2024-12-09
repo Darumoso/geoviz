@@ -1,6 +1,7 @@
 import NextAuth from 'next-auth'
 import CredentialsProviders from 'next-auth/providers/credentials'
 import db from '@/app/lib/db'
+import bcrypt from 'bcrypt';
 
 const authOptions = {
   providers: [
@@ -19,16 +20,16 @@ const authOptions = {
         },
       },
       async authorize(credentials, req) {
-        console.log("cred:" + credentials)
-
         const userFound = await db.Usuario.findUnique({
             where: {
-                email: credentails.email
+                email: credentials.email
             }
         })
-
-        console.log("user:" + userFound)
         if (!userFound) return null
+
+        const isPasswordValid = await bcrypt.compare(credentials.password, userFound.passwordHash);
+        if (!isPasswordValid) return null;
+
 
         return {
             id: userFound.id,
