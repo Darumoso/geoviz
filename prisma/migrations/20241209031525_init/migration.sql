@@ -5,6 +5,7 @@ CREATE TABLE "Usuario" (
     "active" BOOLEAN NOT NULL,
     "institution" VARCHAR(40) NOT NULL,
     "email" VARCHAR(40) NOT NULL,
+    "phone" VARCHAR(10),
     "firstName" VARCHAR(40) NOT NULL,
     "lastName" VARCHAR(40) NOT NULL,
 
@@ -49,6 +50,7 @@ CREATE TABLE "Bitacora" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Usuario_email_key" ON "Usuario"("email");
+CREATE UNIQUE INDEX "Usuario_phone_key" ON "Usuario"("phone");
 
 -- AddForeignKey
 ALTER TABLE "UsuarioProject" ADD CONSTRAINT "UsuarioProject_idUsuario_fkey" FOREIGN KEY ("idUsuario") REFERENCES "Usuario"("id") ON DELETE CASCADE ON UPDATE CASCADE;

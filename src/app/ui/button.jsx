@@ -1,8 +1,8 @@
-'use client';
+'use client'
 
-export default function Button({ onClick, children, className}) {
+export default function Button({ children, onClick, className}) {
     return (
-        <button onClick={onClick} className={`w-4/12 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600 transition duration-200 ${className}`}>
+        <button className={`text-white px-4 py-2 font-semibold rounded transition duration-200 ${className}`} onClick={onClick}>
             {children}
         </button>
     );

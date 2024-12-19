@@ -1,8 +1,11 @@
+import Link from "next/link";
 import Login from "./auth/acceder/page";
-import UsersDashboard from "./usersDashboard";
+import AdminDashboard from "./dashboard/layout";
 
 export default function Home() {
   return (
-    <Login />
+    <Link href="/dashboard">
+      <AdminDashboard />
+    </Link>
   );
 }

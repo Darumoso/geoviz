@@ -27,7 +27,7 @@ const authOptions = {
         })
         if (!userFound) return null
 
-        const isPasswordValid = await bcrypt.compare(credentials.password, userFound.passwordHash);
+        const isPasswordValid = await bcrypt.compare(credentials.password, userFound.password);
         if (!isPasswordValid) return null;
 
 

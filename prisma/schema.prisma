@@ -13,6 +13,7 @@ model Usuario {
   active      Boolean
   institution String   @db.VarChar(40)
   email       String   @unique @db.VarChar(40)
+  phone       String   @unique @db.VarChar(10)
   firstName   String   @db.VarChar(40)
   lastName    String   @db.VarChar(40)
   projects    UsuarioProject[]

@@ -1,4 +1,5 @@
 'use client'
+
 import React from 'react'
 import DeckGL from '@deck.gl/react'
 import { Map } from 'react-map-gl/maplibre'
