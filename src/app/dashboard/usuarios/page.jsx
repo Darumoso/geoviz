@@ -5,9 +5,9 @@ import Link from 'next/link';
 import Button from '../../ui/button'
 import Input from '../../ui/input';
 import ButtonImg from '../../ui/imgbutton';
-import CrearUsuario from './agregarUsuario';
 import ActualizarUsuario from './actualizarUsuario';
 import EliminarUsuario from './eliminarUsuario';
+import AgregarUsuario from './agregarUsuario';
 
 export default function Usuarios() {
     const [searchTerm, setSearchTerm] = useState('');
@@ -38,7 +38,7 @@ export default function Usuarios() {
         <div className="h-full p-8">
             {/* Mostrar el formulario para agregar un usuario*/}
             {newUserForm && (
-                <CrearUsuario toggleNewUserFormValue={toggleNewUserFormValue}/>
+                <AgregarUsuario toggleNewUserFormValue={toggleNewUserFormValue}/>
             )}
 
             {/* Mostrar el formulario para actualizar un usuario*/}

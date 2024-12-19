@@ -3,7 +3,7 @@
 import Input from '../../ui/input'
 import Button from '../../ui/button';
 
-export default function CrearUsuario({ toggleNewUserFormValue }){
+export default function AgregarUsuario({ toggleNewUserFormValue }){
     return (
         <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
             <div className="bg-white p-4 rounded-lg shadow-xl w-96">

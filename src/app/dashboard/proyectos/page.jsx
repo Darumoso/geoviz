@@ -3,23 +3,35 @@
 import { useState } from 'react'
 import Input from '../../ui/input';
 import Button from '../../ui/button';
+import AgregarProyecto from './agregarProyecto';
 
 export default function Proyectos(){
     const [searchTerm, setSearchTerm] = useState('');
     const [project, setProjects] = useState([]);
+    const [newProjectForm, setNewProjectForm] = useState(false);
 
     const handleSearch = (e) => {
         setSearchTerm(e.target.value);
     };
 
+    const toggleNewProjectFormValue = () => {
+        setNewProjectForm(!newProjectForm);
+    };
+
     return (
         <div className="h-full p-8">
+            {/* Mostrar el formulario para agregar un usuario*/}
+            {newProjectForm && (
+                <AgregarProyecto toggleNewProjectFormValue={toggleNewProjectFormValue}/>
+            )}
+
             <div className="h-full bg-white rounded-md shadow-lg p-8">
                 <div className="flex justify-between items-center mb-8">
                     <h1 className="text-4xl font-bold text-black">Proyectos registrados</h1>
                     <Button
                         className="px-4 bg-blue-700 hover:bg-blue-800"
                         children="Agregar proyecto"
+                        onClick={toggleNewProjectFormValue}
                     />
                 </div>
 
@@ -39,6 +51,7 @@ export default function Proyectos(){
                                 <th className="p-4">ID</th>
                                 <th className="p-4">Nombre</th>
                                 <th className="p-4">Descripción</th>
+                                <th className="p-4">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
