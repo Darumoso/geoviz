@@ -19,7 +19,7 @@ export default function Proyectos(){
     };
 
     return (
-        <div className="h-full p-8">
+        <div className="h-full p-8 overflow-hidden">
             {/* Mostrar el formulario para agregar un usuario*/}
             {newProjectForm && (
                 <AgregarProyecto toggleNewProjectFormValue={toggleNewProjectFormValue}/>
@@ -44,8 +44,8 @@ export default function Proyectos(){
                     />
                 </div>
 
-                <div className="overflow-auto bg-white rounded-lg shadow-md">
-                    <table className="w-full text-left border-collapse">
+                <div className="overflow-auto flex-grow bg-white rounded-lg shadow-md">
+                    <table className="w-full text-left">
                         <thead>
                             <tr className="bg-blue-800 text-white">
                                 <th className="p-4">ID</th>

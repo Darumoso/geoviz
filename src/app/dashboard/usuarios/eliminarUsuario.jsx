@@ -6,7 +6,7 @@ import Button from '../../ui/button'
 export default function EliminarUsuario({ toggleDeleteUserMessageValue }){
     return (
         <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div className="bg-white p-4 rounded-lg shadow-xl w-96">
+            <div className="bg-white p-4 rounded-lg shadow-xl form-width">
                 <div className="flex flex-col justify-center m-8 items-center">
                     <h1 className="text-3xl text-center font-bold">¿Está seguro que quiere eliminar al usuario?</h1>
                     <Image

@@ -7,5 +7,8 @@ export default function Home() {
     <Link href="/dashboard">
       <AdminDashboard />
     </Link>
+    /*<Link href="/auth/acceder">
+      <Login />
+    </Link>*/
   );
 }

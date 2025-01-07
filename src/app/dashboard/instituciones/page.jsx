@@ -1,0 +1,141 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import Input from '../../ui/input';
+import ButtonImg from '../../ui/imgbutton';
+import Button from '../../ui/button';
+import AgregarInstitucion from './agregarInstitucion';
+import EliminarInstitucion from './eliminarInstitucion';
+
+export default function Instituciones(){
+    const [searchTerm, setSearchTerm] = useState('');
+    const [institutions, setInstitutions] = useState([]);
+    const [newInstitutionForm, setNewInstitutionForm] = useState(false);
+    const [updateInstitutionForm, setUpdateInstitutionForm] = useState(false);
+    const [deleteInstitutionMessage, setDeleteInstitutionMessage] = useState(false);
+    const [selectedInstitutionId, setSelectedInstitutionId] = useState(null);
+
+    const getInstitutions = async () => {
+        try {
+            const res = await fetch("/api/instituciones", {
+                method: "GET"
+            }); 
+            if (!res.ok) throw new Error("Error al obtener instituciones");
+            const data = await res.json();
+            setInstitutions(data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        getInstitutions();
+    }, []);
+
+    const handleSearch = (e) => {
+        setSearchTerm(e.target.value);
+    };
+
+    const toggleNewInstitutionFormValue = () => {
+        setNewInstitutionForm(!newInstitutionForm);
+    };
+
+    const toggleDeleteInstitutionMessageValue = () => {
+        setDeleteInstitutionMessage(!deleteInstitutionMessage);
+    };
+
+    const deleteInstitution = (id) => {
+        toggleDeleteInstitutionMessageValue();
+        setSelectedInstitutionId(id);
+    }
+
+    return (
+        <div className="h-full p-8 overflow-hidden">
+            {/* Mostrar el formulario para agregar una institución*/}
+            {newInstitutionForm && (
+                <AgregarInstitucion 
+                    toggleNewInstitutionFormValue={toggleNewInstitutionFormValue} 
+                    getInstitutions={getInstitutions}
+                />
+            )}
+
+            {/* Mostrar confirmación para eliminar una institución*/}
+            {deleteInstitutionMessage && (
+                <EliminarInstitucion 
+                    toggleDeleteInstitutionMessageValue={toggleDeleteInstitutionMessageValue} 
+                    getInstitutions={getInstitutions}
+                    institutionId={selectedInstitutionId}
+                />
+            )}
+
+            <div className="h-full bg-white rounded-md shadow-lg p-8">
+                <div className="flex justify-between items-center mb-8">
+                    <h1 className="text-4xl font-bold text-black">Instituciones registradas</h1>
+                    <Button
+                        className="px-4 bg-blue-700 hover:bg-blue-800"
+                        children="Agregar institución"
+                        onClick={toggleNewInstitutionFormValue}
+                    />
+                </div>
+
+                <div className="mb-8">
+                    <Input
+                        type="text"
+                        placeholder="Buscar institución por nombre"
+                        value={searchTerm}
+                        onChange={handleSearch}
+                    />
+                </div>
+                {institutions.length > 0 ? (
+                    <div className="overflow-auto flex-grow bg-white rounded-lg shadow-md">
+                        <table className="w-full text-left">
+                            <thead>
+                                <tr className="bg-blue-800 text-white">
+                                    <th className="p-4">ID</th>
+                                    <th className="p-4">Nombre</th>
+                                    <th className="p-4">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {/* Buscar por nombre */}
+                                {institutions
+                                    .filter((institution) =>
+                                        institution.name.toLowerCase().includes(searchTerm.toLowerCase())
+                                    )
+                                    .map((institution) => (
+                                        <tr key={institution.id} className="hover:bg-gray-50">
+                                            <td className="p-2 border w-32">{institution.id}</td>
+                                            <td className="p-2 border">{institution.name}</td>
+                                            <td className="p-2 border w-32">
+                                                <div className="flex-grow flex justify-center items-center space-x-4">
+                                                    <ButtonImg
+                                                        imgSrc="/editar.png"
+                                                        imgAlt="Ícono editar"
+                                                        className="bg-yellow-400 hover:bg-yellow-500"
+                                                        width={25}
+                                                        height={25}
+                                                    />
+                                                    <ButtonImg
+                                                        imgSrc="/eliminar.png"
+                                                        imgAlt="Ícono eliminar"
+                                                        className="bg-red-500 hover:bg-red-600"
+                                                        onClick={() => deleteInstitution(institution.id)}
+                                                        width={25}
+                                                        height={25}
+                                                    />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                            </tbody>
+                        </table>
+                    </div>
+                ) : (
+                    <div className="text-center">
+                        <p className="text-lg font-bold">No hay instituciones registradas.</p>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+}

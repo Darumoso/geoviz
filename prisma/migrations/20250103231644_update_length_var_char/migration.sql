@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "Institucion" ALTER COLUMN "name" SET DATA TYPE VARCHAR(60);
+
+-- AlterTable
+ALTER TABLE "Proyecto" ALTER COLUMN "name" SET DATA TYPE VARCHAR(60);

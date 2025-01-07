@@ -1,18 +1,17 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link';
 import Button from '../../ui/button'
-import Input from '../../ui/input';
-import ButtonImg from '../../ui/imgbutton';
-import ActualizarUsuario from './actualizarUsuario';
-import EliminarUsuario from './eliminarUsuario';
-import AgregarUsuario from './agregarUsuario';
+import Input from '../../ui/input'
+import ButtonImg from '../../ui/imgbutton'
+import ActualizarUsuario from './actualizarUsuario'
+import EliminarUsuario from './eliminarUsuario'
+import AgregarUsuario from './agregarUsuario'
 
 export default function Usuarios() {
     const [searchTerm, setSearchTerm] = useState('');
     const [users, setUsers] = useState([
-        { id: 1, name: 'Juan', lastName: 'Pérez Sánchez', email: 'micorreo@gmail.com', institution: 'Mi institución', project: 'Proyecto 1' },
+        { id: 1, name: 'Juan', lastName: 'Pérez Sánchez', email: 'micorreo@gmail.com', phone: '1234567890',institution: 'Mi institución', project: 'Proyecto 1' },
     ]);
     const [newUserForm, setNewUserForm] = useState(false);
     const [updateUserForm, setUpdateUserForm] = useState(false);
@@ -35,7 +34,7 @@ export default function Usuarios() {
     }
 
     return (
-        <div className="h-full p-8">
+        <div className="h-full p-8 overflow-hidden">
             {/* Mostrar el formulario para agregar un usuario*/}
             {newUserForm && (
                 <AgregarUsuario toggleNewUserFormValue={toggleNewUserFormValue}/>
@@ -70,14 +69,15 @@ export default function Usuarios() {
                     />
                 </div>
 
-                <div className="overflow-auto bg-white rounded-lg shadow-md">
-                    <table className="w-full text-left border-collapse">
+                <div className="overflow-auto flex-grow bg-white rounded-lg shadow-md">
+                    <table className="w-full text-left">
                         <thead>
                             <tr className="bg-blue-800 text-white">
                                 <th className="p-4">ID</th>
                                 <th className="p-4">Nombre</th>
                                 <th className="p-4">Apellidos</th>
                                 <th className="p-4">Correo electrónico</th>
+                                <th className="p-4">Teléfono</th>
                                 <th className="p-4">Institución</th>
                                 <th className="p-4">Proyectos</th>
                                 <th className="p-4">Acciones</th>
@@ -91,13 +91,14 @@ export default function Usuarios() {
                                 )
                                 .map((user) => (
                                     <tr key={user.id} className="hover:bg-gray-50">
-                                        <td className="p-2 border">{user.id}</td>
+                                        <td className="p-2 border w-32">{user.id}</td>
                                         <td className="p-2 border">{user.name}</td>
                                         <td className="p-2 border">{user.lastName}</td>
                                         <td className="p-2 border">{user.email}</td>
+                                        <td className="p-2 border">{user.phone}</td>
                                         <td className="p-2 border">{user.institution}</td>
                                         <td className="p-2 border">{user.project}</td>
-                                        <td className="p-2 border">
+                                        <td className="p-2 border w-32">
                                             <div className="flex-grow flex justify-center items-center space-x-4">
                                                 <ButtonImg
                                                     imgSrc="/editar.png"
