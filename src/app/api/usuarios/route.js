@@ -1,113 +1,61 @@
-import { NextResponse } from 'next/server'
-import db from '../../../app/lib/db'
-import bcrypt from 'bcrypt'
+import { NextResponse } from 'next/server';
+import db from '../../../app/lib/db';
+import bcrypt from 'bcrypt';
 
-
-// Crear un nuevo usuario
-export async function POST(request) {
-    const data = await request.json()
-
-    console.log(data)
-    const newUser = await db.usuario.create({
-        data
-    })
-
-    return NextResponse.json(newUser)
-}
-
-
-/*// Obtener todos los usuarios
-export async function GETALL() {
+// Obtener todos los usuarios
+export async function GET() {
     try {
-        const users = await db.Usuario.findMany(); 
-        return NextResponse.json(users);
-    } catch (error) {
-        return NextResponse.error();
-    }
-}
+        const usuarios = await db.Usuario.findMany({
+            orderBy: {
+                id: "asc"
+            },
+            include: {
+                Institucion: true
+            }
+            
+        }); 
 
-// Crear un nuevo usuario
-export async function POST(request) {
-    try {
-        const { firstName, lastName, email, password, institution, phone, active } = await request.json();
+        const usuariosFiltrados = usuarios.map(({password, ...usuario}) => usuario);
         
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        const newUser = await db.Usuario.create({
-        data: {
-            firstName,
-            lastName,
-            email,
-            password: hashedPassword,
-            institution,
-            phone,
-            active,
-        },
-        });
-        return NextResponse.json(newUser, { status: 201 });
+        return NextResponse.json(usuariosFiltrados, { status: 200 });
     } catch (error) {
-        return NextResponse.error();
-    }
+        return NextResponse.json({message: "Error al obtener instituciones."}, { status: 500 });
+    }                                           
 }
 
-// Obtener usuario por ID
-export async function GET({ params }) {
-    const { id } = params;
+// Crear un nuevo usuario
+export async function POST(req) {
     try {
-        const user = await db.Usuario.findUnique({
-        where: { id: parseInt(id) },
-        });
+        const { firstName, lastName, active, email, phone, isAdmin, institution, project } = await req.json();
+        
+        const existingUser = await db.usuario.findUnique({
+            where: {
+                email: email
+            }
+        })
 
-        if (!user) {
-        return NextResponse.json({ message: 'Usuario no encontrado' }, { status: 404 });
+        if (existingUser) {
+            return NextResponse.json({message: "El usuario ya está registrado"}, { status: 400 });
         }
 
-        return NextResponse.json(user);
+        const hashedPassword = await bcrypt.hash("12345", 10);
+
+        await db.usuario.create({
+            data: {
+                firstName: firstName,
+                lastName: lastName,
+                password: hashedPassword,
+                active: active === "true" ? true : false,
+                email: email,
+                phone: phone === "" ? null : phone,
+                isAdmin: isAdmin === "true" ? true : false,
+                idInstitucion: Number(institution),
+                project: project
+            }
+        });
+        return NextResponse.json({message: "Usuario creado exitosamente."}, { status: 201 });
     } catch (error) {
-        return NextResponse.error();
+        console.error(error);
+        return NextResponse.json({message: "Error al crear al usuario."}, { status: 500 });
     }
 }
-
-// Actualizar un usuario
-export async function PUT(request, { params }) {
-    const { id } = params;
-    try {
-        const { firstName, lastName, email, password, institution, phone, active } = await request.json();
-
-        let hashedPassword = undefined;
-        if (password) {
-        hashedPassword = await bcrypt.hash(password, 10);
-        }
-
-        const updatedUser = await db.Usuario.update({
-        where: { id: parseInt(id) },
-        data: {
-            firstName,
-            lastName,
-            email,
-            password: hashedPassword,
-            institution,
-            phone,
-            active,
-        },
-        });
-
-        return NextResponse.json(updatedUser);
-    } catch (error) {
-        return NextResponse.error();
-    }
-}
-
-// Eliminar un usuario
-export async function DELETE({ params }) {
-    const { id } = params;
-    try {
-        const deletedUser = await db.Usuario.delete({
-        where: { id: parseInt(id) }, 
-        });
-
-        return NextResponse.json(deletedUser);
-    } catch (error) {
-        return NextResponse.error();
-    }
-}*/

@@ -12,7 +12,7 @@ export default function AgregarInstitucion({ toggleNewInstitutionFormValue, getI
     const [institutionCreated, setInstitutionCreated] = useState(false);
     const [showCreateStatus, setShowCreateStatus] = useState(false);
 
-    const createInstitution = handleSubmit(async data => {
+    const createInstitution = handleSubmit(async (data) => {
         try {
             const res = await fetch("/api/instituciones", {
                 method: "POST",
@@ -25,7 +25,7 @@ export default function AgregarInstitucion({ toggleNewInstitutionFormValue, getI
             const resJSON = await res.json();
             
             if (res.ok) {
-                setFeedbackMessage("La institución se ha creado exitosamente.");
+                setFeedbackMessage(resJSON.message);
                 setInstitutionCreated(true);
                 getInstitutions();
             } else {
@@ -87,7 +87,6 @@ export default function AgregarInstitucion({ toggleNewInstitutionFormValue, getI
                         <Input
                             type="text"
                             id="name"
-                            className="mb-4"
                             {...register("name", {
                                 required: {
                                     value: true,
@@ -97,7 +96,42 @@ export default function AgregarInstitucion({ toggleNewInstitutionFormValue, getI
                         />
                         {errors.name && (
                             <span className="text-red-500 text-xs">{errors.name.message}</span>
-                        )}
+                        )}      
+                        <label className="m-2 text-slate-900 block">Institución activa:</label>
+                        <div className="flex block space-x-8">
+                            <div className="flex ml-2">
+                                <Input
+                                    type="radio"
+                                    id="activeYes"
+                                    value="true"
+                                    defaultChecked
+                                    {...register("active", {
+                                        required: {
+                                            value: true,
+                                            message: "Debes elegir una opción",
+                                        },
+                                    })}
+                                />
+                                <label htmlFor="activeYes" className="ml-2 text-slate-900">Sí</label>
+                            </div>
+                            <div className="flex">
+                                <Input
+                                    type="radio"
+                                    id="activeNo"
+                                    value="false"
+                                    {...register("active", {
+                                        required: {
+                                            value: true,
+                                            message: "Debes elegir una opción",
+                                        },
+                                    })}
+                                />
+                                <label htmlFor="activeNo" className="ml-2 text-slate-900">No</label>
+                            </div>
+                        </div>
+                        {errors.active && (
+                            <span className="text-red-500 text-xs">{errors.active.message}</span>
+                        )}  
                         <div className="flex justify-center m-4 space-x-12">
                             <Button
                                 className="bg-blue-700 hover:bg-blue-800"

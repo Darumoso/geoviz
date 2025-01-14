@@ -9,7 +9,7 @@ export default function AdminDashboard ({ children }) {
         <div className="flex min-h-screen bg-gray-200">
             <div>
                 <SideNav>
-                    <nav className="flex-grow">
+                    <nav className="flex flex-col justify-between h-full">
                         <ul className="flex flex-col items-center space-y-4">
                             <li>
                                 <Link href="/dashboard/usuarios">
@@ -62,6 +62,16 @@ export default function AdminDashboard ({ children }) {
                                 </Link>
                             </li>
                         </ul>
+                        <div className="mt-96 flex justify-center">
+                                <Link href="/auth/acceder">
+                                    <ButtonImg
+                                        imgSrc="/salir.png"
+                                        imgAlt="Botón cerrar sesión"
+                                        width={30}
+                                        height={30}
+                                    />
+                                </Link>
+                        </div>
                     </nav>
                 </SideNav>
             </div>

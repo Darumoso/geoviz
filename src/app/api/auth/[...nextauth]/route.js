@@ -1,42 +1,42 @@
-import NextAuth from 'next-auth'
-import CredentialsProviders from 'next-auth/providers/credentials'
-import db from '@/app/lib/db'
-import bcrypt from 'bcrypt'
+import NextAuth from 'next-auth';
+import CredentialsProviders from 'next-auth/providers/credentials';
+import db from '../../../../app/lib/db';
+import bcrypt from 'bcrypt';
 
 const authOptions = {
     providers: [
         CredentialsProviders({
-        name: "Credentials",
-        credentials: {
-            email: {
-            label: "Correo",
-            type: "text",
-            placeholder: "Correo electrónico",
+            name: "Credentials",
+            credentials: {
+                email: {
+                    label: "Correo",
+                    type: "text",
+                    placeholder: "Correo electrónico",
+                },
+                password: {
+                    label: "Contraseña",
+                    type: "password",
+                    placeholder: "Contraseña",
+                },
             },
-            password: {
-            label: "Contraseña",
-            type: "password",
-            placeholder: "Contraseña",
-            },
-        },
-        async authorize(credentials, req) {
-            const userFound = await db.Usuario.findUnique({
-                where: {
-                    email: credentials.email
+            async authorize(credentials, req) {
+                const userFound = await db.usuario.findUnique({
+                    where: {
+                        email: credentials.email
+                    }
+                })
+                if (!userFound) throw new Error("Usuario no encontrado");
+
+                const isPasswordValid = await bcrypt.compare(credentials.password, userFound.password);
+                if (!isPasswordValid) throw new Error("Contraseña incorrecta");
+
+
+                return {
+                    id: userFound.id,
+                    name: userFound.firstName,
+                    email: userFound.email
                 }
-            })
-            if (!userFound) return null
-
-            const isPasswordValid = await bcrypt.compare(credentials.password, userFound.password);
-            if (!isPasswordValid) return null;
-
-
-            return {
-                id: userFound.id,
-                name: userFound.firstName,
-                email: userFound.email
-            }
-        },
+            },
         }),
     ],
 };

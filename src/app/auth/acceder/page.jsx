@@ -1,15 +1,25 @@
 "use client"
 
-import Image from 'next/image'
-import Button from '../../ui/button'
-import Input from '../../ui/input'
-import { useForm } from 'react-hook-form'
+import Image from 'next/image';
+import Button from '../../ui/button';
+import Input from '../../ui/input';
+import { useForm } from 'react-hook-form';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 export default function Login() {
     const { register, handleSubmit, formState: { errors } } = useForm();
+    const router = useRouter();
 
-    const onSubmit = handleSubmit(data => {
-        console.log(data)
+    const login = handleSubmit(async (data) => {
+        const res = await signIn("credentials", {
+            email: data.email,
+            password: data.password,
+            redirect: false
+        })
+        if (res.ok) {
+            router.push("/dashboard");
+        }
     })
 
     return (
@@ -27,7 +37,7 @@ export default function Login() {
             </div>
             {/* Login form */}
             <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-md">
-                <form onSubmit={onSubmit}>
+                <form onSubmit={login}>
                     <h1 className="font-bold text-center text-3xl ml-4">Inicio de sesión</h1>
                     <label 
                         htmlFor="email" 

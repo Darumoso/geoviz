@@ -6,14 +6,14 @@ import ButtonImg from '../../ui/imgbutton';
 import Button from '../../ui/button';
 import AgregarInstitucion from './agregarInstitucion';
 import EliminarInstitucion from './eliminarInstitucion';
+import ActualizarInstitucion from './actualizarInstitucion';
 
 export default function Instituciones(){
-    const [searchTerm, setSearchTerm] = useState('');
+    const [institutionToSearch, setInstitutionToSearch] = useState('');
     const [institutions, setInstitutions] = useState([]);
     const [newInstitutionForm, setNewInstitutionForm] = useState(false);
     const [updateInstitutionForm, setUpdateInstitutionForm] = useState(false);
-    const [deleteInstitutionMessage, setDeleteInstitutionMessage] = useState(false);
-    const [selectedInstitutionId, setSelectedInstitutionId] = useState(null);
+    const [selectedInstitution, setSelectedInstitution] = useState(null);
 
     const getInstitutions = async () => {
         try {
@@ -32,22 +32,22 @@ export default function Instituciones(){
         getInstitutions();
     }, []);
 
-    const handleSearch = (e) => {
-        setSearchTerm(e.target.value);
+    const searchInstitution = (e) => {
+        setInstitutionToSearch(e.target.value);
     };
 
     const toggleNewInstitutionFormValue = () => {
         setNewInstitutionForm(!newInstitutionForm);
     };
 
-    const toggleDeleteInstitutionMessageValue = () => {
-        setDeleteInstitutionMessage(!deleteInstitutionMessage);
+    const toggleUpdateInstitutionFormValue = () => {
+        setUpdateInstitutionForm(!updateInstitutionForm)
     };
 
-    const deleteInstitution = (id) => {
-        toggleDeleteInstitutionMessageValue();
-        setSelectedInstitutionId(id);
-    }
+    const updateInstitution = (institution) => {
+        toggleUpdateInstitutionFormValue();
+        setSelectedInstitution(institution);
+    };
 
     return (
         <div className="h-full p-8 overflow-hidden">
@@ -59,12 +59,12 @@ export default function Instituciones(){
                 />
             )}
 
-            {/* Mostrar confirmación para eliminar una institución*/}
-            {deleteInstitutionMessage && (
-                <EliminarInstitucion 
-                    toggleDeleteInstitutionMessageValue={toggleDeleteInstitutionMessageValue} 
+            {/* Mostrar el formulario para actualizar una institución */}
+            {updateInstitutionForm && (
+                <ActualizarInstitucion
+                    toggleUpdateInstitutionFormValue={toggleUpdateInstitutionFormValue}
                     getInstitutions={getInstitutions}
-                    institutionId={selectedInstitutionId}
+                    selectedInstitution={selectedInstitution}
                 />
             )}
 
@@ -82,8 +82,8 @@ export default function Instituciones(){
                     <Input
                         type="text"
                         placeholder="Buscar institución por nombre"
-                        value={searchTerm}
-                        onChange={handleSearch}
+                        value={institutionToSearch}
+                        onChange={searchInstitution}
                     />
                 </div>
                 {institutions.length > 0 ? (
@@ -100,26 +100,19 @@ export default function Instituciones(){
                                 {/* Buscar por nombre */}
                                 {institutions
                                     .filter((institution) =>
-                                        institution.name.toLowerCase().includes(searchTerm.toLowerCase())
+                                        institution.name.toLowerCase().includes(institutionToSearch.toLowerCase())
                                     )
                                     .map((institution) => (
                                         <tr key={institution.id} className="hover:bg-gray-50">
                                             <td className="p-2 border w-32">{institution.id}</td>
                                             <td className="p-2 border">{institution.name}</td>
-                                            <td className="p-2 border w-32">
+                                            <td className="p-2 border w-20">
                                                 <div className="flex-grow flex justify-center items-center space-x-4">
                                                     <ButtonImg
                                                         imgSrc="/editar.png"
                                                         imgAlt="Ícono editar"
                                                         className="bg-yellow-400 hover:bg-yellow-500"
-                                                        width={25}
-                                                        height={25}
-                                                    />
-                                                    <ButtonImg
-                                                        imgSrc="/eliminar.png"
-                                                        imgAlt="Ícono eliminar"
-                                                        className="bg-red-500 hover:bg-red-600"
-                                                        onClick={() => deleteInstitution(institution.id)}
+                                                        onClick={() => updateInstitution(institution)}
                                                         width={25}
                                                         height={25}
                                                     />

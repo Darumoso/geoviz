@@ -10,29 +10,28 @@ datasource db {
 model Usuario {
   id            Int      @id @default(autoincrement())
   password      String   @db.VarChar(255)
-  active        Boolean  @default(true)
+  active        Boolean  
+  isAdmin       Boolean 
   email         String   @unique @db.VarChar(40)
-  phone         String   @unique @db.VarChar(10)
+  phone         String?  @unique @db.VarChar(10)
   firstName     String   @db.VarChar(40)
   lastName      String   @db.VarChar(40)
   idInstitucion Int
-  Institucion   Institucion @relation(fields: [idInstitucion], references: [id], onDelete: SetNull)
-  proyectos     UsuarioProyecto[]
-  bitacoras     Bitacora[]
+  Institucion   Institucion @relation(fields: [idInstitucion], references: [id])
+  project      String  @db.VarChar(40)
 }
 
 model Proyecto {
   id          Int               @id @default(autoincrement())
   name        String            @db.VarChar(60)
   description String
-  active      Boolean           @default(true)
+  active      Boolean           
   usuarios       UsuarioProyecto[]
 }
 
 model UsuarioProyecto {
   idUsuario   Int
   idProyecto  Int
-  Usuario     Usuario @relation(fields: [idUsuario], references: [id], onDelete: Cascade)
   Proyecto    Proyecto @relation(fields: [idProyecto], references: [id], onDelete: Cascade)
   @@id([idUsuario, idProyecto])
 }
@@ -47,7 +46,6 @@ model Bitacora {
   idUsuario Int
   idScreen  Int
   dateTime  DateTime  @default(now())
-  Usuario   Usuario   @relation(fields: [idUsuario], references: [id], onDelete: Cascade)
   Screen    Screen?   @relation(fields: [idScreen], references: [id], onDelete: Cascade)
 
   @@id([idUsuario, idScreen])
@@ -56,6 +54,7 @@ model Bitacora {
 model Institucion {
   id      Int       @id @default(autoincrement())
   name    String    @unique @db.VarChar(60)
+  active  Boolean   
   usuarios Usuario[]
 }
 

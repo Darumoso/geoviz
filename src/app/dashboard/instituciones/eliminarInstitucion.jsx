@@ -4,27 +4,26 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Button from '../../ui/button';
 
-export default function EliminarInstitucion({ toggleDeleteInstitutionMessageValue, getInstitutions, institutionId }){
+export default function EliminarInstitucion({ toggleDeleteInstitutionMessageValue, getInstitutions, selectedInstitution }){
     const [institutionDeleted, setInstitutionDeleted] = useState(false);
     const [feedbackMessage, setFeedbackMessage] = useState('');
     const [showDeleteStatus, setShowDeleteStatus] = useState(false);
 
     const deleteInstitution = async () => {
         try {
-            console.log(institutionId);
-            const res = await fetch(`/api/instituciones/${institutionId}`, {
+            const res = await fetch(`/api/instituciones/${selectedInstitution.id}`, {
                 method: "DELETE"
             });
-
+            
             const resJSON = await res.json();
-
+            
             if (res.ok) {
-                setFeedbackMessage("La institución se ha eliminado correctamente.")
+                setFeedbackMessage(resJSON.message)
                 setInstitutionDeleted(true);
-                getInstitutions();
             } else {
                 setFeedbackMessage(resJSON.message);
             }
+
             setShowDeleteStatus(true);
         } catch (error) {
             console.log(error);

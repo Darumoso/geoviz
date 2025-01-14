@@ -1,21 +1,21 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Input from '../../ui/input';
 import Button from '../../ui/button';
 import { useForm } from 'react-hook-form';
 
-export default function ActualizarInstitucion({ toggleNewInstitutionFormValue, getInstitutions }) {
-    const { register, handleSubmit, formState: { errors } } = useForm();
+export default function ActualizarInstitucion({ toggleUpdateInstitutionFormValue, getInstitutions, selectedInstitution }) {
+    const { register, setValue, handleSubmit, formState: { errors } } = useForm();
     const [feedbackMessage, setFeedbackMessage] = useState('');
     const [institutionUpdated, setInstitutionUpdated] = useState(false);
     const [showFeedback, setShowFeedback] = useState(false);
 
-    const onSubmit = handleSubmit(async data => {
+    const updateInstitution = handleSubmit(async (data) => {
         try {
-            const res = await fetch("/api/instituciones", {
-                method: "POST",
+            const res = await fetch(`/api/instituciones/${selectedInstitution.id}`, {
+                method: "PUT",
                 body: JSON.stringify(data),
                 headers: {
                     "Content-Type": "application/json"
@@ -25,8 +25,8 @@ export default function ActualizarInstitucion({ toggleNewInstitutionFormValue, g
             const resJSON = await res.json();
             
             if (res.ok) {
-                setFeedbackMessage("La institución se ha actualizado exitosamente.");
-                setInstitutionCreated(true);
+                setFeedbackMessage(resJSON.message);
+                setInstitutionUpdated(true);
                 getInstitutions();
             } else {
                 setFeedbackMessage(resJSON.message);
@@ -38,11 +38,18 @@ export default function ActualizarInstitucion({ toggleNewInstitutionFormValue, g
         }
     });
 
+    useEffect(() => {
+        if (selectedInstitution) {
+            setValue("name", selectedInstitution.name);
+            setValue("active", selectedInstitution.active ? "true" : "false");
+        }
+    }, [selectedInstitution, setValue]);
+
     const handleCloseFeedback = () => {
         setShowFeedback(false);
-        if (feedbackMessage === "La institución se ha actualizado exitosamente.") {
-            toggleNewInstitutionFormValue();
-            setInstitutionCreated(false);
+        if (institutionUpdated) {
+            toggleUpdateInstitutionFormValue();
+            setInstitutionUpdated(false);
         }
     };
 
@@ -65,8 +72,8 @@ export default function ActualizarInstitucion({ toggleNewInstitutionFormValue, g
                         ) : (
                             <div className="flex justify-center">
                                 <Image
-                                    src="/advertencia.png"
-                                    alt="Ícono advertencia"
+                                    src="/error.png"
+                                    alt="Ícono error"
                                     width={180}
                                     height={180}
                                     className="m-4"
@@ -80,15 +87,14 @@ export default function ActualizarInstitucion({ toggleNewInstitutionFormValue, g
                         />
                     </div>
                 ) : (
-                    <form onSubmit={onSubmit}>
+                    <form onSubmit={updateInstitution}>
                         <div className="flex justify-center m-8">
-                            <h2 className="text-3xl font-bold">Agregar institución</h2>
+                            <h2 className="text-3xl font-bold">Actualizar institución</h2>
                         </div>
                         <label htmlFor="name" className="m-2 text-slate-900 block">Nombre</label>
                         <Input
                             type="text"
                             id="name"
-                            className="mb-4"
                             {...register("name", {
                                 required: {
                                     value: true,
@@ -99,6 +105,40 @@ export default function ActualizarInstitucion({ toggleNewInstitutionFormValue, g
                         {errors.name && (
                             <span className="text-red-500 text-xs">{errors.name.message}</span>
                         )}
+                        <label className="m-2 text-slate-900 block">Institución activa:</label>
+                        <div className="flex block space-x-8">
+                            <div className="flex ml-2">
+                                <Input
+                                    type="radio"
+                                    id="activeYes"
+                                    value="true"
+                                    {...register("active", {
+                                        required: {
+                                            value: true,
+                                            message: "Debes elegir una opción",
+                                        },
+                                    })}
+                                />
+                                <label htmlFor="activeYes" className="ml-2 text-slate-900">Sí</label>
+                            </div>
+                            <div className="flex">
+                                <Input
+                                    type="radio"
+                                    id="activeNo"
+                                    value="false"
+                                    {...register("active", {
+                                        required: {
+                                            value: true,
+                                            message: "Debes elegir una opción",
+                                        },
+                                    })}
+                                />
+                                <label htmlFor="activeNo" className="ml-2 text-slate-900">No</label>
+                            </div>
+                        </div>
+                        {errors.active && (
+                            <span className="text-red-500 text-xs">{errors.active.message}</span>
+                        )}                        
                         <div className="flex justify-center m-4 space-x-12">
                             <Button
                                 className="bg-blue-700 hover:bg-blue-800"
@@ -106,7 +146,7 @@ export default function ActualizarInstitucion({ toggleNewInstitutionFormValue, g
                             />
                             <Button
                                 className="bg-gray-500 hover:bg-gray-600"
-                                onClick={toggleNewInstitutionFormValue}
+                                onClick={toggleUpdateInstitutionFormValue}
                                 children="Cancelar"
                             />
                         </div>
