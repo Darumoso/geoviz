@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import db from '../../../app/lib/db';
+import db from '@/app/lib/db';
 
 // Obtener todas las instituciones
 export async function GET() {
@@ -11,7 +11,8 @@ export async function GET() {
         });
         return NextResponse.json(instituciones, { status: 200 });
     } catch (error) {
-        return NextResponse.json({messsage: "Error al conectar con el servidor"}, { status: 500 });
+        console.error(error);
+        return NextResponse.json({ messsage: "Error al obtener las instituciones." }, { status: 500 });
     }
 }
 
@@ -19,23 +20,28 @@ export async function GET() {
 export async function POST(req) {
     try {
         const { name, active } = await req.json();
+        const nameTrim = name.trim();
+        const activeBool = active === "true" ? true : false;
+
         const existingInstitution = await db.institucion.findUnique({
             where: {
-                name
+                name: nameTrim
             }
         });
+
         if (existingInstitution) {
-            return NextResponse.json({message: "La institución ya está registrada."}, { status: 400 });
+            return NextResponse.json({ message: "La institución ya está registrada." }, { status: 400 });
         }
+        
         await db.institucion.create({ 
             data: {
-                name,
-                active: active === "true" ? true : false
+                name: nameTrim,
+                active: activeBool
             }
         });
-        return NextResponse.json({message: "Institución creada exitosamente."}, { status: 201 });
+        return NextResponse.json({ message: "Institución creada exitosamente." }, { status: 201 });
     } catch (error) {
-        return NextResponse.json({messsage: "Error al conectar con el servidor"}, { status: 500 })
+        return NextResponse.json({ messsage: "Error al crear la institución." }, { status: 500 })
     }
 }
 

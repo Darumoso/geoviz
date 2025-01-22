@@ -1,11 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Input from '../../ui/input';
-import ButtonImg from '../../ui/imgbutton';
-import Button from '../../ui/button';
+import Input from '@/app/ui/input';
+import ButtonImg from '@/app/ui/imgbutton';
+import Button from '@/app/ui/button';
 import AgregarInstitucion from './agregarInstitucion';
-import EliminarInstitucion from './eliminarInstitucion';
 import ActualizarInstitucion from './actualizarInstitucion';
 
 export default function Instituciones(){
@@ -21,8 +20,8 @@ export default function Instituciones(){
                 method: "GET"
             }); 
             if (!res.ok) throw new Error("Error al obtener instituciones");
-            const data = await res.json();
-            setInstitutions(data);
+            const institutions = await res.json();
+            setInstitutions(institutions);
         } catch (error) {
             console.log(error);
         }

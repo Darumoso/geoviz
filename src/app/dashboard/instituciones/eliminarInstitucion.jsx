@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import Button from '../../ui/button';
+import Button from '@/app/ui/button';
 
 export default function EliminarInstitucion({ toggleDeleteInstitutionMessageValue, getInstitutions, selectedInstitution }){
     const [institutionDeleted, setInstitutionDeleted] = useState(false);

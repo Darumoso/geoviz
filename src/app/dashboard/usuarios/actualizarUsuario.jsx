@@ -3,8 +3,8 @@
 import { useForm } from 'react-hook-form';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import Input from '../../ui/input';
-import Button from '../../ui/button';
+import Input from '@/app/ui/input';
+import Button from '@/app/ui/button';
 
 export default function ActualizarUsuario({ toggleUpdateUserFormValue, getUsers, selectedUser }){
     const { register, setValue, handleSubmit, formState: { errors } } = useForm();
@@ -185,8 +185,12 @@ export default function ActualizarUsuario({ toggleUpdateUserFormValue, getUsers,
                             {...register("email", {
                                 required: {
                                     value: true,
-                                    message: "El email es obligatorio",
+                                    message: "El correo electrónico es obligatorio",
                                 },
+                                pattern: {
+                                    value: /^[a-zA-Z0-9._]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                                    message: "El correo electrónico no es válido",
+                                }
                             })}
                         />
                         {errors.email && (
@@ -202,8 +206,15 @@ export default function ActualizarUsuario({ toggleUpdateUserFormValue, getUsers,
                                     maxLength: 10,
                                     value: false,
                                 },
+                                pattern: {
+                                    value: /^[0-9]{10}$/,
+                                    message: "El teléfono debe tener 10 caracteres numéricos",
+                                }
                             })}
                         />
+                        {errors.phone && (
+                            <span className="text-red-500 text-xs">{errors.phone.message}</span>
+                        )}
                         <label htmlFor="institution" className="m-2 text-slate-900 block">Institución:</label>
                         <select 
                             className="p-2 border rounded w-full" 

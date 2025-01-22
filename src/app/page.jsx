@@ -1,6 +1,6 @@
 import Link from "next/link";
-import Login from "./auth/acceder/page";
-import AdminDashboard from "./dashboard/layout";
+import Login from "@/app/auth/acceder/page";
+import AdminDashboard from "@/app/dashboard/layout";
 
 export default function Home() {
   return (

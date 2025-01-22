@@ -1,7 +1,7 @@
 'use client'
 
-import Link from 'next/link'
-import ButtonImg from '../ui/imgbutton'
+import Link from "next/link";
+import ButtonImg from "@/app/ui/imgbutton";
 
 export default function SideNav({ children }) {
     return (

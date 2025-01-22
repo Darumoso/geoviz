@@ -1,9 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import Button from '../../ui/button';
-import Input from '../../ui/input';
-import ButtonImg from '../../ui/imgbutton';
+import Button from '@/app/ui/button';
+import Input from '@/app/ui/input';
+import ButtonImg from '@/app/ui/imgbutton';
 import ActualizarUsuario from './actualizarUsuario';
 import EliminarUsuario from './eliminarUsuario';
 import AgregarUsuario from './agregarUsuario';

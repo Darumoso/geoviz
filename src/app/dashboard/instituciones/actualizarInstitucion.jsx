@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import Input from '../../ui/input';
-import Button from '../../ui/button';
+import Input from '@/app/ui/input';
+import Button from '@/app/ui/button';
 import { useForm } from 'react-hook-form';
 
 export default function ActualizarInstitucion({ toggleUpdateInstitutionFormValue, getInstitutions, selectedInstitution }) {
@@ -91,7 +91,7 @@ export default function ActualizarInstitucion({ toggleUpdateInstitutionFormValue
                         <div className="flex justify-center m-8">
                             <h2 className="text-3xl font-bold">Actualizar institución</h2>
                         </div>
-                        <label htmlFor="name" className="m-2 text-slate-900 block">Nombre</label>
+                        <label htmlFor="name" className="m-2 text-slate-900 block">Nombre:</label>
                         <Input
                             type="text"
                             id="name"

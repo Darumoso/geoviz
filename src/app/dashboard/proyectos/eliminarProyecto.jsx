@@ -4,14 +4,14 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Button from '@/app/ui/button';
 
-export default function EliminarUsuario({ toggleDeleteUserMessageValue, getUsers, selectedUser }){
-    const [userDeleted, setUserDeleted] = useState(false);
+export default function EliminarProyecto({ toggleDeleteProjectMessageValue, getProjects, selectedProject }){
+    const [projectDeleted, setProjectDeleted] = useState(false);
     const [feedbackMessage, setFeedbackMessage] = useState('');
     const [showDeleteStatus, setShowDeleteStatus] = useState(false);
 
-    const deleteUser = async () => {
+    const deleteProject = async () => {
         try {
-            const res = await fetch(`/api/usuarios/${selectedUser.id}`, {
+            const res = await fetch(`/api/proyectos/${selectedProject.id}`, {
                 method: "DELETE"
             });
 
@@ -19,8 +19,8 @@ export default function EliminarUsuario({ toggleDeleteUserMessageValue, getUsers
 
             if (res.ok) {
                 setFeedbackMessage(resJSON.message)
-                setUserDeleted(true);
-                getUsers();
+                setProjectDeleted(true);
+                getProjects();
             } else {
                 setFeedbackMessage(resJSON.message);
             }
@@ -32,9 +32,9 @@ export default function EliminarUsuario({ toggleDeleteUserMessageValue, getUsers
 
     const closeFeedback = () => {
         setShowDeleteStatus(false);
-        if (userDeleted) {
-            toggleDeleteUserMessageValue();
-            setUserDeleted(false);
+        if (projectDeleted) {
+            toggleDeleteProjectMessageValue();
+            setProjectDeleted(false);
         }
     };
 
@@ -44,7 +44,7 @@ export default function EliminarUsuario({ toggleDeleteUserMessageValue, getUsers
                 {showDeleteStatus ? (
                     <div className="text-center">
                         <p className="text-2xl font-bold mt-8">{feedbackMessage}</p>
-                        {userDeleted ? (
+                        {projectDeleted ? (
                             <div className="flex justify-center">
                                 <Image
                                     src="/correcto.png"
@@ -74,7 +74,7 @@ export default function EliminarUsuario({ toggleDeleteUserMessageValue, getUsers
                 ) : (
                     <div>
                         <div className="flex flex-col justify-center m-8 items-center">
-                            <h1 className="text-3xl text-center font-bold">¿Está seguro que quiere eliminar al usuario?</h1>
+                            <h1 className="text-3xl text-center font-bold">¿Está seguro que quiere eliminar el proyecto?</h1>
                             <Image
                                 src="/advertencia.png"
                                 alt="Ícono advertencia"
@@ -87,11 +87,11 @@ export default function EliminarUsuario({ toggleDeleteUserMessageValue, getUsers
                             <Button
                                 className="bg-red-500 hover:bg-red-600"
                                 children="Eliminar"
-                                onClick={deleteUser}
+                                onClick={deleteProject}
                             />
                             <Button
                                 className="bg-gray-500 hover:bg-gray-600"
-                                onClick={toggleDeleteUserMessageValue}
+                                onClick={toggleDeleteProjectMessageValue}
                                 children="Cancelar"
                             />
                         </div>

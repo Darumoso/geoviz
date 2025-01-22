@@ -8,38 +8,43 @@ datasource db {
 }
 
 model Usuario {
-  id            Int      @id @default(autoincrement())
-  password      String   @db.VarChar(255)
+  id            Int         @id @default(autoincrement())
+  password      String      @db.VarChar(255)
   active        Boolean  
   isAdmin       Boolean 
-  email         String   @unique @db.VarChar(40)
-  phone         String?  @unique @db.VarChar(10)
-  firstName     String   @db.VarChar(40)
-  lastName      String   @db.VarChar(40)
+  email         String      @unique @db.VarChar(40)
+  phone         String?     @unique @db.VarChar(10)
+  firstName     String      @db.VarChar(40)
+  lastName      String      @db.VarChar(40)
   idInstitucion Int
   Institucion   Institucion @relation(fields: [idInstitucion], references: [id])
-  project      String  @db.VarChar(40)
+  project       String      @db.VarChar(40)
+}
+
+model Institucion {
+  id            Int         @id @default(autoincrement())
+  name          String      @unique @db.VarChar(60)
+  active        Boolean   
+  usuarios      Usuario[]
 }
 
 model Proyecto {
-  id          Int               @id @default(autoincrement())
-  name        String            @db.VarChar(60)
-  description String
-  active      Boolean           
-  usuarios       UsuarioProyecto[]
+  id            Int         @id @default(autoincrement())
+  name          String      @unique
+  description   String
+  active        Boolean           
 }
 
 model UsuarioProyecto {
   idUsuario   Int
   idProyecto  Int
-  Proyecto    Proyecto @relation(fields: [idProyecto], references: [id], onDelete: Cascade)
   @@id([idUsuario, idProyecto])
 }
 
 model Screen {
-  id          Int       @id @default(autoincrement())
-  name        String    @db.VarChar(30)
-  bitacoras   Bitacora[]
+  id            Int         @id @default(autoincrement())
+  name          String      @db.VarChar(30)
+  bitacoras     Bitacora[]
 }
 
 model Bitacora {
@@ -49,12 +54,5 @@ model Bitacora {
   Screen    Screen?   @relation(fields: [idScreen], references: [id], onDelete: Cascade)
 
   @@id([idUsuario, idScreen])
-}
-
-model Institucion {
-  id      Int       @id @default(autoincrement())
-  name    String    @unique @db.VarChar(60)
-  active  Boolean   
-  usuarios Usuario[]
 }
 

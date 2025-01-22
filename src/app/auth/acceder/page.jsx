@@ -1,8 +1,8 @@
 "use client"
 
 import Image from 'next/image';
-import Button from '../../ui/button';
-import Input from '../../ui/input';
+import Button from '@/app/ui/button';
+import Input from '@/app/ui/input';
 import { useForm } from 'react-hook-form';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -42,7 +42,7 @@ export default function Login() {
                     <label 
                         htmlFor="email" 
                         className="pt-6 text-slate-900 m-2 block text-md">
-                            Email:
+                            Correo electrónico:
                     </label>
                     <Input
                         type="email"

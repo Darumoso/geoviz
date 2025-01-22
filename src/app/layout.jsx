@@ -1,4 +1,4 @@
-import "./ui/globals.css";
+import "@/app/ui/globals.css";
 
 export const metadata = {
   title: "GeoViz",

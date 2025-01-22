@@ -1,6 +1,6 @@
 'use client'
 
-import Image from 'next/image';
+import Image from "next/image";
 
 export default function ButtonImg({ children, className, onClick, imgSrc, imgAlt, width, height }) {
     return (

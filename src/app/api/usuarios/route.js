@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import db from '../../../app/lib/db';
+import db from '@/app/lib/db';
 import bcrypt from 'bcrypt';
 
 // Obtener todos los usuarios
@@ -19,7 +19,7 @@ export async function GET() {
         
         return NextResponse.json(usuariosFiltrados, { status: 200 });
     } catch (error) {
-        return NextResponse.json({message: "Error al obtener instituciones."}, { status: 500 });
+        return NextResponse.json({message: "Error al obtener a los usuarios."}, { status: 500 });
     }                                           
 }
 
@@ -27,35 +27,43 @@ export async function GET() {
 export async function POST(req) {
     try {
         const { firstName, lastName, active, email, phone, isAdmin, institution, project } = await req.json();
-        
+
+        const firstNameTrim = firstName.trim();
+        const lastNameTrim = lastName.trim();
+        const activeBool = active === "true" ? true : false;
+        const emailTrim = email.trim();
+        const phoneTrim = phone === "" ? null : phone.trim();
+        const isAdminBool = isAdmin === "true" ? true : false;
+        const idInstitucionNumber = Number(institution);
+        const projectTrim = project.trim();
+
         const existingUser = await db.usuario.findUnique({
             where: {
-                email: email
+                email: emailTrim
             }
         })
 
         if (existingUser) {
-            return NextResponse.json({message: "El usuario ya está registrado"}, { status: 400 });
+            return NextResponse.json({ message: "El usuario ya está registrado" }, { status: 400 });
         }
 
         const hashedPassword = await bcrypt.hash("12345", 10);
 
         await db.usuario.create({
             data: {
-                firstName: firstName,
-                lastName: lastName,
+                firstName: firstNameTrim,
+                lastName: lastNameTrim,
                 password: hashedPassword,
-                active: active === "true" ? true : false,
-                email: email,
-                phone: phone === "" ? null : phone,
-                isAdmin: isAdmin === "true" ? true : false,
-                idInstitucion: Number(institution),
-                project: project
+                active: activeBool,
+                email: emailTrim,
+                phone: phoneTrim,
+                isAdmin: isAdminBool,
+                idInstitucion: idInstitucionNumber,
+                project: projectTrim
             }
         });
-        return NextResponse.json({message: "Usuario creado exitosamente."}, { status: 201 });
+        return NextResponse.json({ message: "Usuario creado exitosamente." }, { status: 201 });
     } catch (error) {
-        console.error(error);
-        return NextResponse.json({message: "Error al crear al usuario."}, { status: 500 });
+        return NextResponse.json({ message: "Error al crear al usuario." }, { status: 500 });
     }
 }

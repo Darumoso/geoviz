@@ -2,13 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import Input from '../../ui/input';
-import Button from '../../ui/button';
+import Input from '@/app/ui/input';
+import Button from '@/app/ui/button';
 import { useForm } from 'react-hook-form';
 
 export default function AgregarUsuario({ toggleNewUserFormValue, getUsers }){
     const { register, handleSubmit, setValue, formState: { errors } } = useForm();
     const [institutions, setInstitutions] = useState([]);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [projects, setProjects] = useState([]);
     const [feedbackMessage, setFeedbackMessage] = useState('');
     const [userCreated, setUserCreated] = useState(false);
     const [showCreateStatus, setShowCreateStatus] = useState(false);
@@ -18,7 +20,7 @@ export default function AgregarUsuario({ toggleNewUserFormValue, getUsers }){
             const res = await fetch("/api/instituciones", {
                 method: "GET"
             }); 
-            if (!res.ok) throw new Error("Error al obtener instituciones");
+            if (!res.ok) throw new Error("Error al obtener las instituciones.");
             const instituciones = await res.json();
             setInstitutions(instituciones.filter((institucion) => institucion.active === true));
         } catch (error) {
@@ -26,8 +28,22 @@ export default function AgregarUsuario({ toggleNewUserFormValue, getUsers }){
         }
     };
 
+    const getProjects = async () => {
+        try {
+            const res = await fetch("/api/proyectos", {
+                method: "GET"
+            }); 
+            if (!res.ok) throw new Error("Error al obtener los proyectos.");
+            const proyectos = await res.json();
+            setProjects(proyectos.filter((project) => project.active === true));
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     useEffect(() => {
         getInstitutions();
+        getProjects();
     }, []);
 
     const createUser = handleSubmit(async (data) => {
@@ -172,8 +188,12 @@ export default function AgregarUsuario({ toggleNewUserFormValue, getUsers }){
                             {...register("email", {
                                 required: {
                                     value: true,
-                                    message: "El email es obligatorio",
+                                    message: "El correo electrónico es obligatorio",
                                 },
+                                pattern: {
+                                    value: /^[a-zA-Z0-9._]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                                    message: "El correo electrónico no es válido",
+                                }
                             })}
                         />
                         {errors.email && (
@@ -186,11 +206,17 @@ export default function AgregarUsuario({ toggleNewUserFormValue, getUsers }){
                             placeholder="1234567890"
                             {...register("phone", {
                                 required: {
-                                    maxLength: 10,
                                     value: false,
                                 },
+                                pattern: {
+                                    value: /^[0-9]{10}$/,
+                                    message: "El teléfono debe tener 10 caracteres numéricos",
+                                }
                             })}
                         />
+                        {errors.phone && (
+                            <span className="text-red-500 text-xs">{errors.phone.message}</span>
+                        )}
                         <label htmlFor="institution" className="m-2 text-slate-900 block">Institución:</label>
                         <select 
                             className="p-2 border rounded w-full" 
@@ -225,8 +251,39 @@ export default function AgregarUsuario({ toggleNewUserFormValue, getUsers }){
                                 },
                             })}
                         />
+                        {/* <div className="relative">
+                            <button
+                                type="button"
+                                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                                className="w-full border border-gray-300 rounded-md p-2 text-left bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                                Seleccionar proyectos
+                            </button>
+                            {isMenuOpen && (
+                                <div className="absolute flex flex-col mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-16 overflow-y-scroll z-10">
+                                    {projects.map((project) => (
+                                        <div key={project.id} className="flex p-1 hover:bg-gray-100">
+                                            <Input
+                                                type="checkbox"
+                                                id={`project-${project.id}`}
+                                                value={project.id}
+                                                {...register("projects", {
+                                                    required: {
+                                                        value: true,
+                                                        message: "Debes seleccionar al menos un proyecto",
+                                                    },
+                                                })}
+                                            />
+                                            <label htmlFor={`project-${project.id}`} className="ml-2 text-slate-900">
+                                                {project.name}
+                                            </label>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div> */}
                         {errors.project && (
-                            <span className="text-red-500 text-xs">{errors.project.message}</span>
+                                <span className="text-red-500 text-xs">{errors.project.message}</span>
                         )}
                         <label className="m-2 text-slate-900 block">Es administrador:</label>
                         <div className="flex block space-x-8">
