@@ -3,9 +3,12 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import DeckGL from "@deck.gl/react";
+import Link from "next/link";
 import { Map, ScaleControl } from "react-map-gl";
 import maplibregl from "maplibre-gl";
 import ButtonImg from "./imgbutton";
+import { Line } from "react-chartjs-2"; 
+import Chart from 'chart.js/auto';
 import { GeoJsonLayer, ScatterplotLayer } from "@deck.gl/layers";
 import "node_modules/maplibre-gl/dist/maplibre-gl.css";
 
@@ -31,6 +34,9 @@ export default function Visualizer() {
     const [viewState, setViewState] = useState(INITIAL_VIEW);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+    const [graph, setGraph] = useState(false);
+    const [displacements, setDisplacements] = useState([]);
+    const [dates, setDates] = useState([]);
     const [points, setPoints] = useState([]);
 
     const fetchPoints = async () => {
@@ -57,13 +63,20 @@ export default function Visualizer() {
         getRadius: 4,
         onClick: async ({ object }) => {
             if (object) {
-                console.log("Clic en el punto:", object.id);
+                console.log("Punto:", object.id);
+                console.log(`Latitud: ${object.latitude}, Longitud: ${object.longitude}`)
                 try {
                     const response = await fetch(`/api/datasets/${object.id}`);
                     if (response.ok) {
                         const data = await response.json();
-                        console.log("Desplazamientos del punto:", data[0].desplazamientos);
-                        console.log("Pendiente del punto:", data[0].pendiente);
+                        setDates([]); // Esto borra el array de fechas
+                        for (let i = 0; i < data[0].desplazamientos.length; i++) {
+                            setDates((prevDates) => [...prevDates, i + 1]);
+                        }
+                        setDisplacements(data[0].desplazamientos);
+                        setGraph(true);
+                        console.log("Desplazamientos:", data[0].desplazamientos);
+                        console.log("Pendiente:", data[0].pendiente);
                     } else {
                         console.error("No se encontraron los datos para el punto.");
                     }
@@ -96,6 +109,19 @@ export default function Visualizer() {
         setViewState(viewState);
     };
 
+    const chartData = {
+        labels: dates,
+        datasets: [
+            {
+                label: "Desplazamientos",
+                data: displacements,
+                fill: false,
+                borderColor: "rgba(75,192,192,1)",
+                tension: 0.1
+            }
+        ]
+    };
+
     return (
         <div className="absolute flex top-0 left-0 w-full h-full">
             <DeckGL
@@ -117,13 +143,15 @@ export default function Visualizer() {
                     />
                 </Map>
             </DeckGL>
-            <ButtonImg
-                className="absolute top-4 left-4 bg-blue-700 hover:bg-blue-800"
-                imgSrc="/home.png"
-                imgAlt="Ícono home"
-                width={30}
-                height={30}
-            />
+            <Link href="/dashboard">
+                <ButtonImg
+                    className="absolute top-4 left-4 bg-blue-700 hover:bg-blue-800"
+                    imgSrc="/home.png"
+                    imgAlt="Ícono home"
+                    width={30}
+                    height={30}
+                />
+            </Link>
             <div className="absolute top-4 right-16">
                 <ButtonImg
                     className="bg-blue-500 hover:bg-blue-600"
@@ -182,6 +210,18 @@ export default function Visualizer() {
                     -
                 </button>
             </div>
+            {graph && (
+                <div className="absolute right-4 top-1/2 h-64 w-96 transform -translate-y-1/2 bg-white border p-2 rounded shadow-md">
+                    <button
+                        onClick={() => setGraph(false)}
+                        className="absolute top-0 right-0 p-2 bg-red-500 text-white rounded hover:bg-red-600"
+                    >
+                        ×
+                    </button>
+                    <Line data={chartData}/>
+                </div>
+            
+            )}
         </div>
     );
 }

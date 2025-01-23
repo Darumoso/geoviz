@@ -1,9 +1,9 @@
-import { Client } from 'pg';
+import { Pool } from 'pg';
 import { NextResponse } from 'next/server';
 
 export async function GET(_, { params }) {
     const { id } = await params;
-    const client = new Client({
+    const pool = new Pool({
         user: 'postgres',
         host: 'localhost',
         database: 'geoviz',
@@ -12,8 +12,7 @@ export async function GET(_, { params }) {
     });
 
     try {
-        await client.connect();
-        const result = await client.query(`
+        const result = await pool.query(`
             SELECT 
                 m AS pendiente,
                 d AS desplazamientos
@@ -24,7 +23,5 @@ export async function GET(_, { params }) {
     } catch (error) {
         console.error(error);
         return NextResponse.json({message: "error"}, {status:500});
-    } finally {
-        await client.end();
-    }
+    } 
 }

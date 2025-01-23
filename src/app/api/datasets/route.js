@@ -1,8 +1,8 @@
-import { Client } from 'pg';
+import { Pool } from 'pg';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-    const client = new Client({
+    const pool = new Pool({
         user: 'postgres',
         host: 'localhost',
         database: 'geoviz',
@@ -11,8 +11,7 @@ export async function GET() {
     });
 
     try {
-        await client.connect();
-        const result = await client.query(`
+        const result = await pool.query(`
             SELECT 
                 ogc_fid as id,
                 ST_X(wkb_geometry) AS longitude,
@@ -23,8 +22,6 @@ export async function GET() {
     } catch (error) {
         console.error(error);
         return NextResponse.json({message: "error"}, {status:500});
-    } finally {
-        await client.end();
     }
 }
 

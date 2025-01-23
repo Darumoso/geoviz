@@ -35,6 +35,9 @@ importers:
       bcrypt:
         specifier: ^5.1.1
         version: 5.1.1
+      chart.js:
+        specifier: ^4.4.7
+        version: 4.4.7
       maplibre-gl:
         specifier: ^4.7.1
         version: 4.7.1
@@ -53,6 +56,9 @@ importers:
       react:
         specifier: ^19.0.0
         version: 19.0.0
+      react-chartjs-2:
+        specifier: ^5.3.0
+        version: 5.3.0(chart.js@4.4.7)(react@19.0.0)
       react-dom:
         specifier: ^19.0.0
         version: 19.0.0(react@19.0.0)
@@ -321,6 +327,9 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
+
+  '@kurkle/color@0.3.4':
+    resolution: {integrity: sha512-M5UknZPHRu3DEDWoipU6sE8PdkZ6Z/S+v4dD+Ke8IaNlpdSQah50lz1KtcFBa2vsdOnwbbnxJwVM4wty6udA5w==}
 
   '@loaders.gl/3d-tiles@4.3.3':
     resolution: {integrity: sha512-3uOXE8W0ppbY7tI5ywrU3RwCLMZtd+Jh0KgY9+EbjBVnZDHcnFxytYuG4NzfJEf5zwv0jladeSbJS1oVbLi8Jw==}
@@ -1001,6 +1010,10 @@ packages:
 
   charenc@0.0.2:
     resolution: {integrity: sha512-yrLQ/yVUFXkzg7EDQsPieE/53+0RlaWTs+wBrvW36cyilJ2SaDWfl4Yj7MtLTXleV9uEKefbAGUPv2/iWSooRA==}
+
+  chart.js@4.4.7:
+    resolution: {integrity: sha512-pwkcKfdzTMAU/+jNosKhNL2bHtJc/sSmYgVbuGTEDhzkrhmyihmP7vUc/5ZK9WopidMDHNe3Wm7jOd/WhuHWuw==}
+    engines: {pnpm: '>=8'}
 
   cheap-ruler@4.0.0:
     resolution: {integrity: sha512-0BJa8f4t141BYKQyn9NSQt1PguFQXMXwZiA5shfoaBYHAb2fFk2RAX+tiWMoQU+Agtzt3mdt0JtuyshAXqZ+Vw==}
@@ -2269,6 +2282,12 @@ packages:
   quickselect@3.0.0:
     resolution: {integrity: sha512-XdjUArbK4Bm5fLLvlm5KpTFOiOThgfWWI4axAZDWg4E/0mKdZyI9tNEfds27qCi1ze/vwTR16kvmmGhRra3c2g==}
 
+  react-chartjs-2@5.3.0:
+    resolution: {integrity: sha512-UfZZFnDsERI3c3CZGxzvNJd02SHjaSJ8kgW1djn65H1KK8rehwTjyrRKOG3VTMG8wtHZ5rgAO5oTHtHi9GCCmw==}
+    peerDependencies:
+      chart.js: ^4.1.1
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
   react-dom@19.0.0:
     resolution: {integrity: sha512-4GV5sHFG0e/0AD4X+ySy6UJd3jVl1iNsNHdpad0qhABJ11twS3TTBnseqsKurKcsNqCEFeGL3uLpVChpIO3QfQ==}
     peerDependencies:
@@ -2991,6 +3010,8 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
+
+  '@kurkle/color@0.3.4': {}
 
   '@loaders.gl/3d-tiles@4.3.3(@loaders.gl/core@4.3.3)':
     dependencies:
@@ -3814,6 +3835,10 @@ snapshots:
       supports-color: 7.2.0
 
   charenc@0.0.2: {}
+
+  chart.js@4.4.7:
+    dependencies:
+      '@kurkle/color': 0.3.4
 
   cheap-ruler@4.0.0: {}
 
@@ -5211,6 +5236,11 @@ snapshots:
   quickselect@2.0.0: {}
 
   quickselect@3.0.0: {}
+
+  react-chartjs-2@5.3.0(chart.js@4.4.7)(react@19.0.0):
+    dependencies:
+      chart.js: 4.4.7
+      react: 19.0.0
 
   react-dom@19.0.0(react@19.0.0):
     dependencies:
